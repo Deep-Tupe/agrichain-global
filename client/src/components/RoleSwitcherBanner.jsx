@@ -42,7 +42,7 @@ export const RoleSwitcherBanner = () => {
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-emerald-400" />
           <span className="font-semibold text-slate-200">
-            Interactive College Demo Mode:
+            Interactive Demo Mode:
           </span>
           <span className="text-slate-400 hidden sm:inline">
             Click any persona to view customized dashboard and workflows:

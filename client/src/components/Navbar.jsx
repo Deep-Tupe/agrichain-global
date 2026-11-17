@@ -10,7 +10,6 @@ import {
   LayoutDashboard, 
   Blocks, 
   Wallet, 
-  BookOpen, 
   PlusCircle,
   LogIn
 } from 'lucide-react';
@@ -24,8 +23,7 @@ export const Navbar = () => {
     walletAddress, 
     connectMetaMask,
     setIsAuthOpen,
-    setIsAddProductOpen,
-    setIsProjectDocsOpen
+    setIsAddProductOpen
   } = useApp();
 
   const navItems = [
@@ -78,15 +76,6 @@ export const Navbar = () => {
               </button>
             )}
 
-            {/* College Project Viva / Docs */}
-            <button
-              onClick={() => setIsProjectDocsOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold hover:bg-indigo-100 transition"
-              title="College Project Report & Viva Voice Guide"
-            >
-              <BookOpen className="w-4 h-4 text-indigo-600" />
-              <span className="hidden sm:inline">Project Guide & Viva</span>
-            </button>
 
             {/* Web3 / MetaMask Connection Button */}
             <button

@@ -12,11 +12,10 @@ import { Dashboards } from './components/Dashboards';
 import { BlockchainLedgerView } from './components/BlockchainLedgerView';
 import { AuthModal } from './components/AuthModal';
 import { AddProductModal } from './components/AddProductModal';
-import { ProjectDocsModal } from './components/ProjectDocsModal';
 import { CheckCircle2, AlertCircle, Info, Heart, Sprout } from 'lucide-react';
 
 export default function App() {
-  const { activeTab, toast, setIsProjectDocsOpen } = useApp();
+  const { activeTab, toast } = useApp();
   const [selectedProductToQuote, setSelectedProductToQuote] = useState(null);
 
   const handleRequestQuote = (product) => {
@@ -94,9 +93,8 @@ export default function App() {
       {/* Modals */}
       <AuthModal />
       <AddProductModal />
-      <ProjectDocsModal />
 
-      {/* Footer matching poster tagline */}
+      {/* Footer */}
       <footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-12 text-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
@@ -113,21 +111,8 @@ export default function App() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-medium">
-            <button
-              onClick={() => setIsProjectDocsOpen(true)}
-              className="text-emerald-400 hover:text-emerald-300 font-bold transition"
-            >
-              College Project Documentation & Viva Guide
-            </button>
-            <span>•</span>
-            <span>Solidity Smart Contract</span>
-            <span>•</span>
-            <span>React + Node.js + EVM</span>
-          </div>
-
           <div className="text-center md:text-right text-[11px] text-slate-500">
-            Final Output (College Project Prototype) • Certified Academic Grade
+            © {new Date().getFullYear()} AgriChain Global. All rights reserved.
           </div>
         </div>
       </footer>
