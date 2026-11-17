@@ -337,12 +337,12 @@
       "exporterName": "OceanGate Logistics & Cargo",
       "origin": "Wayanad, Kerala, India",
       "destinationPort": "Jebel Ali Port, Dubai",
-      "status": "Confirmed & Escrow Funded",
+      "status": "Delivered & Funds Released",
       "paymentTerms": "LC / T/T (Letter of Credit / Bank Transfer)",
       "txHash": "0x20dd054f5ff70912f91bde861698df9a1fe7476844b7678222910a166ea69aff",
       "contractAddress": "0x71C849203649E7c28dF29A44eB5B6E94191698B2",
       "createdAt": "2026-11-17T15:47:07.300Z",
-      "escrowStatus": "Locked on Blockchain",
+      "escrowStatus": "Funds Transferred to Farmer/Seller",
       "network": "Sepolia Testnet (11155111)",
       "trackingId": "TRK-AGI13288"
     },
@@ -398,7 +398,7 @@
       "productName": "Wayanad Organic Black Pepper & Cardamom (20 Tons)",
       "vesselName": "MSC Mediterranean Horizon (IMO 948291)",
       "containerNumber": "CRXU-9853064",
-      "currentLocation": "Origin Packhouse - Nashik India",
+      "currentLocation": "Jebel Ali Port, Dubai (Delivered)",
       "originPort": "JNPT Nhava Sheva Port, Mumbai",
       "destinationPort": "Jebel Ali Port, Dubai",
       "estimatedArrival": "Estimated 8 Days",
@@ -421,43 +421,49 @@
           "step": 2,
           "title": "Quality Check",
           "description": "Phytosanitary inspection & certification",
-          "date": "--",
-          "status": "pending"
+          "date": "17/11/2026, 9:32:11 pm",
+          "status": "completed",
+          "txHash": "0x9d8bd2479611b82d2f66a1aced14f51b741f236f3046146d7d1f31c49680aa38"
         },
         {
           "step": 3,
           "title": "Packaging",
           "description": "Export-grade container packing with IoT telemetry",
-          "date": "--",
-          "status": "pending"
+          "date": "17/11/2026, 9:32:15 pm",
+          "status": "completed",
+          "txHash": "0x17a568aa65aa930a001f2156f2675a473753abbf355e4e0ecbf06fc29449679f"
         },
         {
           "step": 4,
           "title": "Dispatched",
           "description": "Gate-in at JNPT Mumbai container terminal",
-          "date": "--",
-          "status": "pending"
+          "date": "17/11/2026, 9:32:18 pm",
+          "status": "completed",
+          "txHash": "0x5ceb509322e52d575a3cc0f2a9d655cbdcd5059942dfae0a2a240c3ed48497eb"
         },
         {
           "step": 5,
           "title": "In Transit",
           "description": "Vessel sailing to destination port",
-          "date": "--",
-          "status": "pending"
+          "date": "17/11/2026, 9:32:20 pm",
+          "status": "completed",
+          "txHash": "0x695954ad9a9a3b9871f53df0e1f35cc172f1a2a781cad589b116d83be2f10405"
         },
         {
           "step": 6,
           "title": "Customs Port Clearance",
           "description": "Destination port customs clearance",
-          "date": "--",
-          "status": "pending"
+          "date": "17/11/2026, 9:32:23 pm",
+          "status": "completed",
+          "txHash": "0x5d16556e2b72e695b740cf01807d816603fe8dbb57a6d07891c56261ff0c2529"
         },
         {
           "step": 7,
           "title": "Delivered",
           "description": "Cargo accepted by importer & smart contract escrow released",
-          "date": "--",
-          "status": "pending"
+          "date": "17/11/2026, 9:32:25 pm",
+          "status": "completed",
+          "txHash": "0x92968b39484eba9fff2e466b1578770484f25861bb770cf2de529a6733bc1cf7"
         }
       ]
     },

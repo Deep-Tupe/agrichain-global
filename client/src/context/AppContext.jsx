@@ -2,8 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
 
-export const SEPOLIA_CHAIN_ID_HEX = '0xaa36a7';
-export const SEPOLIA_CONFIG = {
+const SEPOLIA_CHAIN_ID_HEX = '0xaa36a7';
+const SEPOLIA_CONFIG = {
   chainId: SEPOLIA_CHAIN_ID_HEX,
   chainName: 'Sepolia Testnet',
   nativeCurrency: { name: 'Sepolia ETH', symbol: 'SEP', decimals: 18 },
@@ -133,6 +133,7 @@ export const AppProvider = ({ children }) => {
     }
 
     try {
+      localStorage.removeItem('agrichain_wallet_manual_disconnect');
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       if (accounts && accounts.length > 0) {
         const primary = accounts[0];
@@ -167,12 +168,31 @@ export const AppProvider = ({ children }) => {
   };
 
   // Disconnect wallet
-  const disconnectWallet = () => {
-    setWalletConnected(false);
-    setFullWalletAddress('');
-    setWalletAddress('0x4a18...9e7a');
-    setWalletBalance('0.0000 SEP');
-    showToast('MetaMask wallet disconnected', 'info');
+  const disconnectWallet = async () => {
+    try {
+      localStorage.setItem('agrichain_wallet_manual_disconnect', 'true');
+      setWalletConnected(false);
+      setFullWalletAddress('');
+      setWalletAddress('Connect Wallet');
+      setWalletBalance('0.0000 SEP');
+      setIsWalletModalOpen(false);
+
+      // Attempt to revoke permissions via MetaMask EIP-2255 if supported
+      if (typeof window !== 'undefined' && window.ethereum?.request) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_revokePermissions',
+            params: [{ eth_accounts: {} }]
+          });
+        } catch (revokeErr) {
+          console.log('Revoke permissions skipped or unsupported:', revokeErr);
+        }
+      }
+
+      showToast('MetaMask wallet disconnected successfully', 'info');
+    } catch (e) {
+      console.warn('Disconnect error:', e);
+    }
   };
 
   // Sign trade agreement order with MetaMask private key (0 Gas)
@@ -230,34 +250,41 @@ export const AppProvider = ({ children }) => {
     if (typeof window !== 'undefined' && window.ethereum) {
       setIsMetaMaskInstalled(true);
 
-      // Check if user already authorized this dApp
-      window.ethereum.request({ method: 'eth_accounts' })
-        .then(async (accounts) => {
-          if (accounts && accounts.length > 0) {
-            const primary = accounts[0];
-            setFullWalletAddress(primary);
-            setWalletAddress(formatAddress(primary));
-            setWalletConnected(true);
+      const isManuallyDisconnected = localStorage.getItem('agrichain_wallet_manual_disconnect') === 'true';
 
-            const currentChain = await window.ethereum.request({ method: 'eth_chainId' });
-            setChainId(currentChain);
-            const { name, isSepolia: chainIsSepolia } = parseChainId(currentChain);
-            setNetworkName(name);
-            setIsSepolia(chainIsSepolia);
+      // Check if user already authorized this dApp (only if not manually disconnected)
+      if (!isManuallyDisconnected) {
+        window.ethereum.request({ method: 'eth_accounts' })
+          .then(async (accounts) => {
+            if (accounts && accounts.length > 0) {
+              const primary = accounts[0];
+              setFullWalletAddress(primary);
+              setWalletAddress(formatAddress(primary));
+              setWalletConnected(true);
 
-            updateWalletBalance(primary);
-            setCurrentUser(prev => ({ ...prev, walletAddress: primary }));
-          }
-        })
-        .catch(console.warn);
+              const currentChain = await window.ethereum.request({ method: 'eth_chainId' });
+              setChainId(currentChain);
+              const { name, isSepolia: chainIsSepolia } = parseChainId(currentChain);
+              setNetworkName(name);
+              setIsSepolia(chainIsSepolia);
+
+              updateWalletBalance(primary);
+              setCurrentUser(prev => ({ ...prev, walletAddress: primary }));
+            }
+          })
+          .catch(console.warn);
+      }
 
       const handleAccountsChanged = (accounts) => {
         if (!accounts || accounts.length === 0) {
+          localStorage.setItem('agrichain_wallet_manual_disconnect', 'true');
           setWalletConnected(false);
           setFullWalletAddress('');
-          setWalletAddress('0x4a18...9e7a');
+          setWalletAddress('Connect Wallet');
+          setWalletBalance('0.0000 SEP');
           showToast('MetaMask account disconnected', 'info');
         } else {
+          localStorage.removeItem('agrichain_wallet_manual_disconnect');
           const primary = accounts[0];
           setFullWalletAddress(primary);
           setWalletAddress(formatAddress(primary));
@@ -273,7 +300,7 @@ export const AppProvider = ({ children }) => {
         const { name, isSepolia: chainIsSepolia } = parseChainId(newChainId);
         setNetworkName(name);
         setIsSepolia(chainIsSepolia);
-        if (fullWalletAddress) updateWalletBalance(fullWalletAddress);
+        updateWalletBalance(fullWalletAddress);
         showToast(`MetaMask switched to ${name}`);
       };
 
@@ -287,7 +314,7 @@ export const AppProvider = ({ children }) => {
         }
       };
     }
-  }, [fullWalletAddress]);
+  }, []);
 
   // Switch demo persona
   const switchDemoRole = (roleName) => {
