@@ -21,6 +21,7 @@ export const WalletModal = () => {
     networkName,
     isSepolia,
     walletBalance,
+    isConnecting,
     connectMetaMask,
     switchToSepolia,
     disconnectWallet,
@@ -251,11 +252,18 @@ export const WalletModal = () => {
 
                 <button
                   onClick={connectMetaMask}
-                  className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2"
+                  disabled={isConnecting}
+                  className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 disabled:opacity-60"
                 >
                   <Wallet className="w-4 h-4" />
-                  <span>Connect with MetaMask</span>
+                  <span>{isConnecting ? 'Waiting for MetaMask Approval...' : 'Connect with MetaMask'}</span>
                 </button>
+
+                {isConnecting && (
+                  <p className="text-[11px] text-amber-800 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
+                    A MetaMask notification window is open. Please open your MetaMask extension to approve the connection.
+                  </p>
+                )}
 
                 {!isMetaMaskInstalled && (
                   <p className="text-[11px] text-slate-400">

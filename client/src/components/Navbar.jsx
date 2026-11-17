@@ -23,6 +23,7 @@ export const Navbar = () => {
     walletConnected, 
     walletAddress, 
     isSepolia,
+    isConnecting,
     connectMetaMask,
     disconnectWallet,
     setIsWalletModalOpen,
@@ -91,17 +92,26 @@ export const Navbar = () => {
                     connectMetaMask();
                   }
                 }}
+                disabled={isConnecting}
                 className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-semibold transition ${
                   walletConnected 
                     ? 'bg-amber-50 border-amber-200 text-amber-900 hover:bg-amber-100 shadow-sm'
-                    : 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
+                    : isConnecting
+                      ? 'bg-amber-50 border-amber-300 text-amber-800'
+                      : 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
                 }`}
                 title={walletConnected ? 'Click to view MetaMask wallet details & Sepolia balance' : 'Click to connect MetaMask wallet'}
               >
-                <div className={`w-2 h-2 rounded-full ${walletConnected ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
+                <div className={`w-2 h-2 rounded-full ${
+                  walletConnected 
+                    ? 'bg-emerald-500 animate-pulse' 
+                    : isConnecting 
+                      ? 'bg-amber-500 animate-ping' 
+                      : 'bg-slate-400'
+                }`} />
                 <Wallet className="w-4 h-4 text-amber-600" />
                 <span className="hidden sm:inline">
-                  {walletConnected ? walletAddress : 'Connect Wallet'}
+                  {walletConnected ? walletAddress : (isConnecting ? 'Check MetaMask...' : 'Connect Wallet')}
                 </span>
                 {walletConnected && (
                   <span className="hidden md:inline px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-200/60 text-amber-900">

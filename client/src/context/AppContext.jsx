@@ -64,6 +64,7 @@ export const AppProvider = ({ children }) => {
   const [walletBalance, setWalletBalance] = useState('0.0000 SEP');
   const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -132,9 +133,29 @@ export const AppProvider = ({ children }) => {
       return;
     }
 
+    if (isConnecting) {
+      showToast('MetaMask request already in progress. Please check your browser extension.', 'info');
+      return;
+    }
+
+    setIsConnecting(true);
+
     try {
       localStorage.removeItem('agrichain_wallet_manual_disconnect');
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+      // Check if accounts are ALREADY authorized first to avoid redundant popups
+      let accounts = [];
+      try {
+        accounts = await window.ethereum.request({ method: 'eth_accounts' });
+      } catch (e) {
+        // Continue to requestAccounts
+      }
+
+      // If no accounts authorized yet, request user approval
+      if (!accounts || accounts.length === 0) {
+        accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      }
+
       if (accounts && accounts.length > 0) {
         const primary = accounts[0];
         setFullWalletAddress(primary);
@@ -161,9 +182,13 @@ export const AppProvider = ({ children }) => {
       console.error(err);
       if (err.code === 4001) {
         showToast('MetaMask connection request rejected by user', 'error');
+      } else if (err.code === -32002 || err.message?.includes('already pending')) {
+        showToast('MetaMask notification is waiting! Click the MetaMask icon in your browser toolbar to approve.', 'info');
       } else {
-        showToast('MetaMask error: ' + (err.message || 'Connection failed'), 'error');
+        showToast('MetaMask: ' + (err.message || 'Connection failed'), 'error');
       }
+    } finally {
+      setIsConnecting(false);
     }
   };
 
@@ -424,6 +449,7 @@ export const AppProvider = ({ children }) => {
         isSepolia,
         walletBalance,
         isMetaMaskInstalled,
+        isConnecting,
         isWalletModalOpen,
         setIsWalletModalOpen,
         connectMetaMask,
