@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { FileText, CheckCircle2, XCircle, ArrowRight, ShieldCheck, Clock, DollarSign, Send } from 'lucide-react';
+import { EscrowSignModal } from './EscrowSignModal';
 import confetti from 'canvas-confetti';
 
 export const QuotationView = ({ quoteProduct, onCloseQuoteProduct }) => {
   const { quotations, currentUser, refreshData, showToast, setActiveTab } = useApp();
   const [submitting, setSubmitting] = useState(false);
+  const [selectedQuotationForSign, setSelectedQuotationForSign] = useState(null);
 
   // New quote form state (if buyer triggered from marketplace)
   const [targetTons, setTargetTons] = useState(20);
@@ -250,11 +252,11 @@ export const QuotationView = ({ quoteProduct, onCloseQuoteProduct }) => {
                       Reject
                     </button>
                     <button
-                      onClick={() => handleAcceptQuotation(quot.id)}
+                      onClick={() => setSelectedQuotationForSign(quot)}
                       className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2"
                     >
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>Accept & Create Order</span>
+                      <span>Accept & Lock Escrow</span>
                     </button>
                   </>
                 ) : (
@@ -277,6 +279,14 @@ export const QuotationView = ({ quoteProduct, onCloseQuoteProduct }) => {
           </div>
         ))}
       </div>
+
+      {/* Escrow Interactive MetaMask Signing Modal */}
+      <EscrowSignModal
+        isOpen={Boolean(selectedQuotationForSign)}
+        onClose={() => setSelectedQuotationForSign(null)}
+        quotation={selectedQuotationForSign}
+        onFinalized={() => setSelectedQuotationForSign(null)}
+      />
     </div>
   );
 };

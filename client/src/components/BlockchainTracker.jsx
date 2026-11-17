@@ -215,13 +215,26 @@ contract AgriChainEscrow {
                       </span>
                       <div className="flex items-center justify-between bg-black/40 px-3 py-2 rounded-xl font-mono text-xs text-emerald-400 border border-white/5">
                         <span className="truncate">{ord.txHash}</span>
-                        <button
-                          onClick={() => copyToClipboard(ord.txHash)}
-                          className="ml-2 p-1 hover:text-white"
-                          title="Copy Tx Hash"
-                        >
-                          <Copy className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center gap-1 shrink-0 ml-2">
+                          <button
+                            onClick={() => copyToClipboard(ord.txHash)}
+                            className="p-1 hover:text-white"
+                            title="Copy Tx Hash"
+                          >
+                            <Copy className="w-3.5 h-3.5" />
+                          </button>
+                          {ord.txHash && (
+                            <a
+                              href={`https://sepolia.etherscan.io/tx/${ord.txHash}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="p-1 hover:text-white text-emerald-400 hover:text-emerald-300 transition"
+                              title="View on Sepolia Etherscan"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
 

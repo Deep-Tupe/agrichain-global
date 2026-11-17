@@ -281,13 +281,21 @@ app.post('/api/quotations/:id/accept', (req, res) => {
 
   // Create Order and Blockchain Record!
   const orderId = quot.orderReference || ('#AGI' + Math.floor(10000 + Math.random() * 90000));
-  const tx = new Transaction('0x3aB9820cDeF8849c', blockchain.contractAddress, 'ORDER_CREATED', {
+  const buyerWallet = req.body?.buyerWallet || '0x3aB9820cDeF8849c';
+  const customTxHash = req.body?.txHash;
+
+  const tx = new Transaction(buyerWallet, blockchain.contractAddress, 'ORDER_CREATED', {
     orderId,
     commodity: quot.productName,
     quantityTons: quot.quantityTons,
     totalAmount: `₹${quot.sellerQuotation.totalAmount.toLocaleString()} ($${quot.sellerQuotation.totalAmountUsd.toLocaleString()})`,
-    paymentTerms: quot.sellerQuotation.paymentTerms
+    paymentTerms: quot.sellerQuotation.paymentTerms,
+    signature: req.body?.signature || null
   }, orderId);
+
+  if (customTxHash) {
+    tx.txHash = customTxHash;
+  }
 
   blockchain.addTransactionAndMine(tx);
 
@@ -300,6 +308,7 @@ app.post('/api/quotations/:id/accept', (req, res) => {
     totalAmountUsd: quot.sellerQuotation.totalAmountUsd,
     buyerId: 'u-buyer-1',
     buyerName: quot.buyerName,
+    buyerWallet: buyerWallet,
     sellerId: 'u-farmer-1',
     sellerName: quot.sellerName,
     exporterName: 'OceanGate Logistics & Cargo',
@@ -307,10 +316,11 @@ app.post('/api/quotations/:id/accept', (req, res) => {
     destinationPort: quot.destinationPort,
     status: 'Confirmed & Escrow Funded',
     paymentTerms: quot.sellerQuotation.paymentTerms,
-    txHash: tx.txHash,
+    txHash: customTxHash || tx.txHash,
     contractAddress: blockchain.contractAddress,
     createdAt: new Date().toISOString(),
     escrowStatus: 'Locked on Blockchain',
+    network: 'Sepolia Testnet (11155111)',
     trackingId: 'TRK-' + orderId.replace('#', '')
   };
 
@@ -439,8 +449,9 @@ app.post('/api/shipments/:trackingId/advance', (req, res) => {
   nextMilestone.date = new Date().toLocaleString();
 
   // Mine blockchain transaction for milestone
+  const customTx = req.body?.txHash;
   const tx = new Transaction(
-    '0xCargoTrackerSystem',
+    req.body?.signerWallet || '0xCargoTrackerSystem',
     blockchain.contractAddress,
     `MILESTONE_${nextMilestone.title.toUpperCase().replace(/\s+/g, '_')}`,
     {
@@ -451,8 +462,11 @@ app.post('/api/shipments/:trackingId/advance', (req, res) => {
     },
     shipment.orderId
   );
+  if (customTx) {
+    tx.txHash = customTx;
+  }
   blockchain.addTransactionAndMine(tx);
-  nextMilestone.txHash = tx.txHash;
+  nextMilestone.txHash = customTx || tx.txHash;
 
   // Update order status if delivered
   if (nextMilestone.step === 7) {

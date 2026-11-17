@@ -12,6 +12,7 @@ import { Dashboards } from './components/Dashboards';
 import { BlockchainLedgerView } from './components/BlockchainLedgerView';
 import { AuthModal } from './components/AuthModal';
 import { AddProductModal } from './components/AddProductModal';
+import { WalletModal } from './components/WalletModal';
 import { CheckCircle2, AlertCircle, Info, Heart, Sprout } from 'lucide-react';
 
 export default function App() {
@@ -93,6 +94,7 @@ export default function App() {
       {/* Modals */}
       <AuthModal />
       <AddProductModal />
+      <WalletModal />
 
       {/* Footer */}
       <footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-12 text-xs">
