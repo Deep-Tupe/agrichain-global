@@ -252,6 +252,29 @@
   ],
   "quotations": [
     {
+      "id": "quot-2806",
+      "orderReference": "#AGI13288",
+      "productName": "Wayanad Organic Black Pepper & Cardamom",
+      "quantityTons": 20,
+      "buyerName": "Global Agro Traders LLC",
+      "buyerLocation": "Dubai, United Arab Emirates",
+      "sellerName": "Ramesh Patel",
+      "origin": "Wayanad, Kerala, India",
+      "destinationPort": "Jebel Ali Port, Dubai",
+      "sellerQuotation": {
+        "pricePerKg": 120,
+        "totalAmount": 2400000,
+        "currency": "INR",
+        "totalAmountUsd": 28743,
+        "deliveryTimeDays": 7,
+        "paymentTerms": "LC / T/T (Letter of Credit / Bank Transfer)",
+        "incoterm": "CIF (Cost, Insurance and Freight)"
+      },
+      "status": "Accepted",
+      "createdAt": "2026-11-17T15:46:50.456Z",
+      "acceptedAt": "2026-11-17T15:47:07.234Z"
+    },
+    {
       "id": "quot-9021",
       "orderReference": "#AGI12345",
       "productName": "Nashik Red Onion",
@@ -300,6 +323,30 @@
   ],
   "orders": [
     {
+      "orderId": "#AGI13288",
+      "productName": "Wayanad Organic Black Pepper & Cardamom",
+      "quantityTons": 20,
+      "totalAmount": 2400000,
+      "currency": "INR",
+      "totalAmountUsd": 28743,
+      "buyerId": "u-buyer-1",
+      "buyerName": "Global Agro Traders LLC",
+      "buyerWallet": "0xf06fc5ddf4936346212f119febe87b8e5267b064",
+      "sellerId": "u-farmer-1",
+      "sellerName": "Ramesh Patel",
+      "exporterName": "OceanGate Logistics & Cargo",
+      "origin": "Wayanad, Kerala, India",
+      "destinationPort": "Jebel Ali Port, Dubai",
+      "status": "Confirmed & Escrow Funded",
+      "paymentTerms": "LC / T/T (Letter of Credit / Bank Transfer)",
+      "txHash": "0x20dd054f5ff70912f91bde861698df9a1fe7476844b7678222910a166ea69aff",
+      "contractAddress": "0x71C849203649E7c28dF29A44eB5B6E94191698B2",
+      "createdAt": "2026-11-17T15:47:07.300Z",
+      "escrowStatus": "Locked on Blockchain",
+      "network": "Sepolia Testnet (11155111)",
+      "trackingId": "TRK-AGI13288"
+    },
+    {
       "orderId": "#AGI12346",
       "productName": "Thompson Seedless Grapes",
       "quantityTons": 10,
@@ -345,6 +392,75 @@
     }
   ],
   "shipments": [
+    {
+      "trackingId": "TRK-AGI13288",
+      "orderId": "#AGI13288",
+      "productName": "Wayanad Organic Black Pepper & Cardamom (20 Tons)",
+      "vesselName": "MSC Mediterranean Horizon (IMO 948291)",
+      "containerNumber": "CRXU-9853064",
+      "currentLocation": "Origin Packhouse - Nashik India",
+      "originPort": "JNPT Nhava Sheva Port, Mumbai",
+      "destinationPort": "Jebel Ali Port, Dubai",
+      "estimatedArrival": "Estimated 8 Days",
+      "telemetry": {
+        "temperature": "5.0 °C",
+        "humidity": "85 %",
+        "co2Level": "0.06 %",
+        "battery": "100 %"
+      },
+      "milestones": [
+        {
+          "step": 1,
+          "title": "Order Confirmed",
+          "description": "Trade agreement locked on blockchain smart contract",
+          "date": "17/11/2026, 9:17:07 pm",
+          "status": "completed",
+          "txHash": "0x20dd054f5ff70912f91bde861698df9a1fe7476844b7678222910a166ea69aff"
+        },
+        {
+          "step": 2,
+          "title": "Quality Check",
+          "description": "Phytosanitary inspection & certification",
+          "date": "--",
+          "status": "pending"
+        },
+        {
+          "step": 3,
+          "title": "Packaging",
+          "description": "Export-grade container packing with IoT telemetry",
+          "date": "--",
+          "status": "pending"
+        },
+        {
+          "step": 4,
+          "title": "Dispatched",
+          "description": "Gate-in at JNPT Mumbai container terminal",
+          "date": "--",
+          "status": "pending"
+        },
+        {
+          "step": 5,
+          "title": "In Transit",
+          "description": "Vessel sailing to destination port",
+          "date": "--",
+          "status": "pending"
+        },
+        {
+          "step": 6,
+          "title": "Customs Port Clearance",
+          "description": "Destination port customs clearance",
+          "date": "--",
+          "status": "pending"
+        },
+        {
+          "step": 7,
+          "title": "Delivered",
+          "description": "Cargo accepted by importer & smart contract escrow released",
+          "date": "--",
+          "status": "pending"
+        }
+      ]
+    },
     {
       "trackingId": "TRK-AGI12346",
       "orderId": "#AGI12346",

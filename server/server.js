@@ -44,21 +44,43 @@ app.get('/api/users', (req, res) => {
 });
 
 app.post('/api/auth/login', (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, mobile, password, role } = req.body;
+  const input = (email || mobile || '').trim();
+  
+  if (!input) {
+    return res.status(400).json({ error: 'Email or Mobile number is required.' });
+  }
+
+  // Validate format: must be valid email or at least 10-digit phone
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(input);
+  const cleanPhone = input.replace(/[^0-9]/g, '');
+  const isPhone = cleanPhone.length >= 10 && cleanPhone.length <= 15;
+
+  if (!isEmail && !isPhone) {
+    return res.status(400).json({ 
+      error: 'Invalid input. Please provide a valid email address (e.g. name@domain.com) or a 10-digit mobile number.' 
+    });
+  }
+
   const data = readData();
   
-  // Find matching user or fallback to standard demo user for the role
-  let user = data.users.find(u => (u.email === email || u.mobile === email) && (!role || u.role.toLowerCase() === role.toLowerCase()));
+  // Find matching user by email or mobile
+  let user = data.users.find(u => 
+    (u.email?.toLowerCase() === input.toLowerCase() || (cleanPhone && u.mobile?.replace(/[^0-9]/g, '') === cleanPhone)) && 
+    (!role || u.role.toLowerCase() === role.toLowerCase())
+  );
+
   if (!user && role) {
     user = data.users.find(u => u.role.toLowerCase() === role.toLowerCase());
   }
 
   if (!user) {
-    // If not found, create a session user
+    // If not found, create a session user with validated email or phone
     user = {
       id: 'u-' + Date.now(),
-      name: email ? email.split('@')[0] : 'Demo User',
-      email: email || 'demo@agrichain.com',
+      name: isEmail ? input.split('@')[0] : `User-${cleanPhone.slice(-4)}`,
+      email: isEmail ? input : `${cleanPhone}@agrichain.com`,
+      mobile: isPhone ? input : '+91 98230 00000',
       role: role || 'Farmer',
       walletAddress: '0x' + crypto.randomBytes(20).toString('hex'),
       location: 'India'
@@ -70,13 +92,28 @@ app.post('/api/auth/login', (req, res) => {
 
 app.post('/api/auth/register', (req, res) => {
   const { name, email, mobile, role, location, farmSize, businessType } = req.body;
+  
+  if (!name || name.trim().length < 2) {
+    return res.status(400).json({ error: 'Please enter a valid full name (at least 2 characters).' });
+  }
+
+  const cleanEmail = (email || '').trim();
+  if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(cleanEmail)) {
+    return res.status(400).json({ error: 'Please provide a valid email address (e.g. name@domain.com).' });
+  }
+
+  const cleanPhone = (mobile || '').replace(/[^0-9]/g, '');
+  if (!cleanPhone || cleanPhone.length < 10 || cleanPhone.length > 15) {
+    return res.status(400).json({ error: 'Please provide a valid mobile number with at least 10 digits.' });
+  }
+
   const data = readData();
 
   const newUser = {
     id: 'u-' + Date.now(),
-    name: name || 'Agricultural Member',
-    email: email || `${Date.now()}@agrichain.com`,
-    mobile: mobile || '+91 98000 00000',
+    name: name.trim(),
+    email: cleanEmail,
+    mobile: mobile.trim(),
     role: role || 'Farmer',
     location: location || 'Nashik, Maharashtra, India',
     walletAddress: '0x' + crypto.randomBytes(20).toString('hex'),
